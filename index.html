@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>روليت الفواكه — لعبة إقصاء مباشرة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ FLYING FRUIT BACKGROUND ============ -->
+  <div class="fruit-bg" id="fruitBg" aria-hidden="true"></div>
+
+  <!-- ============ SITE LOGO (TOP OF PAGE) ============ -->
+  <div class="site-logo-top">
+    <img src="folder_images/aymn_logo.png" alt="شعار العاب أيمن" class="site-logo-img">
+  </div>
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <a class="brand-logo" id="brandLogo" href="#">
+        <span class="brand-logo-emoji" aria-hidden="true">🏠</span>
+        <span class="brand-logo-text">العودة لموقع العاب أيمن</span>
+      </a>
+      <span class="brand-mark" aria-hidden="true">🍉</span>
+      <div class="brand-text">
+        <h1>روليت الفواكه</h1>
+        <p>أدر العجلة. اختر الصندوق. اصمد في البث.</p>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <div class="round-timer" id="roundTimerBox" title="مؤقت الجولة">
+        <span class="round-timer-icon" aria-hidden="true">⏱️</span>
+        <span class="round-timer-label">الوقت المتبقي</span>
+        <strong class="round-timer-val" id="roundTimerVal">04:00</strong>
+      </div>
+      <div class="round-counter" id="roundCounter" title="عدد جولات العجلة">
+        <span class="round-counter-icon" aria-hidden="true">🎯</span>
+        <span class="round-counter-label">الجولات</span>
+        <strong class="round-counter-val" id="roundCounterVal">0</strong>
+      </div>
+      <button class="btn btn-ghost" id="soundBtn" type="button" aria-pressed="false">
+        <span id="soundIcon">🔊</span> <span class="btn-label">الصوت مفعّل</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ MAIN LAYOUT ============ -->
+  <main class="layout">
+
+    <!-- HOST CONTROL PANEL -->
+    <section class="panel host-panel" id="hostPanel" aria-label="لوحة تحكم المضيف">
+      <h2>لوحة تحكم المضيف</h2>
+      <p class="hint">أدخل اسم لاعب واحد في كل سطر، أو افصل بينهم بفاصلة.</p>
+
+      <textarea id="namesInput" placeholder="مثال:&#10;نجم_البيكسل&#10;الوحش_المبتدئ&#10;أريا، كينجي، سول"></textarea>
+      <button class="btn btn-primary" id="loadBtn" type="button">➕ إضافة لاعبين</button>
+
+      <div class="player-list" id="playerList" aria-live="polite"></div>
+
+      <div class="panel-divider"></div>
+
+      <button class="btn btn-spin" id="spinBtn" type="button" disabled>🎡 أدر العجلة</button>
+
+      <div class="utility-row">
+        <button class="btn btn-utility" id="shuffleBtn" type="button">🔀 خلط</button>
+        <button class="btn btn-utility" id="resetWheelBtn" type="button">↺ إعادة ضبط العجلة</button>
+      </div>
+
+      <div class="player-count">
+        <span>اللاعبون المتبقون</span>
+        <strong id="playerCountVal">0</strong>
+      </div>
+    </section>
+
+    <!-- WHEEL DISPLAY -->
+    <section class="panel wheel-panel" aria-label="عجلة الروليت">
+      <div class="current-turn">
+        <span class="label">الدور الحالي</span>
+        <span class="name" id="currentTurnName">—</span>
+      </div>
+
+      <div class="wheel-stage" id="wheelStage">
+        <div class="pointer" aria-hidden="true"></div>
+        <div class="wheel-ring" id="wheelRing">
+          <div class="wheel" id="wheel">
+            <div class="wheel-empty" id="wheelEmpty">أضف لاعبين اثنين على الأقل لبناء العجلة 🍓</div>
+          </div>
+        </div>
+        <div class="hub" id="hub" aria-hidden="true">
+          <img src="folder_images/hub_icon.png" alt="" id="hubImg">
+          <span class="hub-fallback" id="hubFallback">🍒</span>
+        </div>
+      </div>
+
+      <div class="winner-strip" id="winnerStrip">🏆 <span id="winnerStripName">—</span> يفوز باللعبة!</div>
+    </section>
+
+  </main>
+
+  <!-- ============ CREDITS ============ -->
+  <section class="credits-row" aria-label="فريق العمل">
+    <div class="credit-box credit-idea glow-float">
+      <span class="credit-badge">💡 فكرة</span>
+      <span class="credit-name">Lu</span>
+      <a class="credit-tiktok" href="https://www.tiktok.com/@lulu_lll6" target="_blank" rel="noopener noreferrer">
+        <span class="tiktok-badge" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="13" height="13" fill="#fff">
+            <path d="M33.5 6c1 4.2 3.7 6.9 8.5 7.2v6.4c-3 .3-5.7-.6-8.5-2.4v13.6c0 8.6-9.4 14.2-17 10.2-4.9-2.6-7.2-8.5-5.2-13.8 2-5.4 7.9-8.4 13.4-6.8v6.8c-2.4-1-5-.3-6.2 1.7-1.2 1.9-.7 4.5 1.1 5.9 1.9 1.5 4.7 1.2 6.2-.7.6-.8.9-1.7.9-2.7V6h6.8z"/>
+          </svg>
+        </span>
+        lulu_lll6
+      </a>
+    </div>
+    <div class="credit-box credit-dev glow-float">
+      <span class="credit-badge">⚙️ تطوير وتنفيذ</span>
+      <span class="credit-name">AYMN</span>
+      <a class="credit-tiktok" href="https://www.tiktok.com/@em70_q" target="_blank" rel="noopener noreferrer">
+        <span class="tiktok-badge" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="13" height="13" fill="#fff">
+            <path d="M33.5 6c1 4.2 3.7 6.9 8.5 7.2v6.4c-3 .3-5.7-.6-8.5-2.4v13.6c0 8.6-9.4 14.2-17 10.2-4.9-2.6-7.2-8.5-5.2-13.8 2-5.4 7.9-8.4 13.4-6.8v6.8c-2.4-1-5-.3-6.2 1.7-1.2 1.9-.7 4.5 1.1 5.9 1.9 1.5 4.7 1.2 6.2-.7.6-.8.9-1.7.9-2.7V6h6.8z"/>
+          </svg>
+        </span>
+        em70_q
+      </a>
+    </div>
+  </section>
+
+  <span class="sr-only" id="liveRegion" role="status" aria-live="assertive"></span>
+
+  <!-- ============ FRUIT SELECTION POPUP ============ -->
+  <div class="overlay" id="fruitOverlay" role="dialog" aria-modal="true" aria-labelledby="fruitPopupTitle">
+    <div class="modal fruit-modal">
+      <p class="eyebrow">تحدي صندوق الفواكه</p>
+      <h2 id="fruitPopupTitle"><span id="fruitPopupPlayer">اللاعب</span>، اختر مصيرك!</h2>
+      <p class="modal-sub" id="fruitModalSub">اختر صندوقًا واحدًا. ثلاثة صناديق آمنة تحتوي فواكه، وواحد يخفي الشخصية — إذا اخترته يتم إقصاؤك.</p>
+
+      <div class="crate-grid" id="crateGrid"></div>
+
+      <div class="crate-result" id="crateResult">
+        <p class="result-text" id="resultText"></p>
+        <div class="result-actions">
+          <button class="btn btn-safe" id="continueBtn" type="button" hidden>✅ متابعة اللعب</button>
+          <button class="btn btn-danger" id="eliminateBtn" type="button" hidden>💀 إقصاء اللاعب</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ WINNER MODAL ============ -->
+  <div class="overlay" id="winnerOverlay" role="dialog" aria-modal="true" aria-labelledby="winnerName">
+    <div class="modal winner-modal">
+      <div class="trophy" aria-hidden="true">🏆</div>
+      <p class="eyebrow">البطل</p>
+      <h2 id="winnerName">—</h2>
+      <p class="modal-sub">نجا من كل الصناديق ليحقق الفوز.</p>
+      <div class="result-actions">
+        <button class="btn btn-safe" id="rematchBtn" type="button">🔁 إعادة الجولة (عودة الجميع)</button>
+        <button class="btn btn-primary" id="newGameBtn" type="button">🆕 لعبة جديدة</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
